@@ -23,13 +23,32 @@ const loadPreviousPage = async () => {
   state.users = users;
 };
 
-//TODO:Implementar!
-const onUserChanged = () => {
-  throw new Error("Not implemented");
+/**
+ *
+ * @param {User} user
+ */
+const onUserChanged = (updatedUser) => {
+  let wasFound = false;
+
+  state.users = state.users.map((user) => {
+    if (user.id === updatedUser.id) {
+      return updatedUser;
+    }
+    return user;
+  });
+
+  if (state.users.length < 10 && !wasFound) {
+    state.users.push(updatedUser);
+  }
 };
 
 const reloadPage = async () => {
-  throw new Error("Not implemented");
+  const users = await loadUsersByPage(state.currentPage);
+  if (users.length === 0) {
+    await loadPreviousPage();
+    return;
+  }
+  state.users = users;
 };
 
 export default {
